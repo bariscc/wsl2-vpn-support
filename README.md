@@ -92,34 +92,25 @@ The state file is used to cleanup created routes when:
 Please follow these steps if you would like your system to automatically execute the WSL2 VPN
 Configuration script each time a network connect or disconnect event occurs:
 
-1. Clone this repo to a `scripts` directory in the Users HOME (C:\Users\<username>)
-1. From the START menu, Open 'Task Scheduler' (Will need ADMIN on Windows)
-1. Click "Create Task" on Right Sidebar
-1. Set the Name to: `Update WSL2 Routing for VPN`, and ensure the 'Run with highest priveleges'
-checkbox is selected
-1. Select 'Triggers' Tab
-1. Click 'New' at bottom of Window
-1. Open 'Begin the task' drop-down and Select 'On an Event'. Next we need to enter the following
-to trigger on the 'Connect' Event
-  - Log: 'Microsoft-Windows-NetworkProfile/Operational'
-  - Source: 'NetworkProfile'
-  - Event ID: '10000'
-8. Click 'OK'
-8. Click 'New' at bottom of Window
-8. Open 'Begin the task' drop-down and Select 'On an Event'. Next we need to enter the following
-to trigger on the 'Disconnect' Event
-  - Log: 'Microsoft-Windows-NetworkProfile/Operational'
-  - Source: 'NetworkProfile'
-  - Event ID: '10001'
-11. Select 'Actions' Tab
-11. Click 'New'
-11. Configure Action:
-  - Action: 'Start a Program'
-  - Program/script: 'Powershell.exe'
-  - Add arguments: '-ExecutionPolicy Bypass -File %HOMEPATH%\scripts\configure-wsl-networking.ps1'
-14. Click 'OK'
-14. Select 'Conditions' Tab
-14. Uncheck box:
-  - Power -> Start the task only if the computer is on AC Power
-17. Click 'OK'
+1. Clone this repo to a `scripts` directory in the Users HOME (C:\Users\<username>\scripts)
+2. Edit the path of script in `globalprotect_post_vpn.reg` file (Replace `[USERNAME]`)
+3. Run `globalprotect_post_vpn.reg` file - this will autorun the script when VPN is connected
+
+## Troubleshoot
+If the script returns an error
+Depending on your Windows configuration, you may have to set the local execution policy to `remoteSigned` and whitelist the script.
+- Run the PowerShell elevated and execute
+  ```console
+  PS C:\Windows\system32> Get-ExecutionPolicy
+  ```
+  if it returns `Restricted` or `Undefined`, execute
+  ```console
+  PS C:\Windows\system32> Set-ExecutionPolicy -ExecutionPolicy RemoteSigned -Scope LocalMachine
+  ```
+  and whitelist the script
+  ```console
+  PS C:\Windows\system32> Unblock-File -Path C:\Users\<username>\scripts\configure-wsl-networking.ps1
+  ```
+  
+  
 
