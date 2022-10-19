@@ -97,18 +97,19 @@ Configuration script each time a network connect or disconnect event occurs:
 3. Run `globalprotect_post_vpn.reg` file - this will autorun the script when VPN is connected
 
 ## Troubleshoot
-If the script returns an error
+If the script returns the `cannot be loaded because running scripts is disabled on this system` error:
+
 Depending on your Windows configuration, you may have to set the local execution policy to `remoteSigned` and whitelist the script.
 - Run the PowerShell elevated and execute
-  ```console
+  ```powershell
   PS C:\Windows\system32> Get-ExecutionPolicy
   ```
   if it returns `Restricted` or `Undefined`, execute
-  ```console
+  ```powershell
   PS C:\Windows\system32> Set-ExecutionPolicy -ExecutionPolicy RemoteSigned -Scope LocalMachine
   ```
   and whitelist the script
-  ```console
+  ```powershell
   PS C:\Windows\system32> Unblock-File -Path C:\Users\<username>\scripts\configure-wsl-networking.ps1
   ```
   
